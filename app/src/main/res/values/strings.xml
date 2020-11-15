@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MVVM Test Task</string>
+    <string name="note_title">Note Title</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="no_note">Oops! It looks a bit lonely here.</string>
+    <string name="delete_all">Delete All</string>
+</resources>
