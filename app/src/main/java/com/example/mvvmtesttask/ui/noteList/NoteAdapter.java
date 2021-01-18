@@ -10,13 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mvvmtesttask.R;
+import com.example.mvvmtesttask.model.entities.Note;
 
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private List<Note> noteList;
-    private OnNoteClicked onNoteClickedListener;
+    private final OnNoteClicked onNoteClickedListener;
 
     public NoteAdapter(OnNoteClicked onNoteClickedListener) {
         this.onNoteClickedListener = onNoteClickedListener;
@@ -41,8 +42,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private  TextView noteDesc;
+        private final TextView title;
+        private final TextView noteDesc;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,12 +57,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             title.setText(note.getNoteTitle());
             noteDesc.setText(note.getNoteDescription());
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.v("note in adapter is",note.getNoteTitle());
-                    onNoteClickedListener.noteClicked(note);
-                }
+            itemView.setOnClickListener(view -> {
+                Log.v("note in adapter is",note.getNoteTitle());
+                onNoteClickedListener.noteClicked(note);
             });
         }
     }
@@ -72,6 +70,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     public interface OnNoteClicked{
-        public void noteClicked(Note note);
+        void noteClicked(Note note);
     }
 }

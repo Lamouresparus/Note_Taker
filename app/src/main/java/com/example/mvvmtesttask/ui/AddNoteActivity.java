@@ -13,18 +13,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mvvmtesttask.R;
-import com.example.mvvmtesttask.data.NoteViewModel;
-import com.example.mvvmtesttask.ui.noteList.Note;
+import com.example.mvvmtesttask.model.NoteViewModel;
+import com.example.mvvmtesttask.model.NoteViewModelFactory;
+import com.example.mvvmtesttask.model.entities.Note;
 import com.example.mvvmtesttask.ui.noteList.NoteListActivity;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AddNoteActivity extends AppCompatActivity {
 
     EditText noteTitleEt;
     EditText noteDescEt;
     private Note note;
     private NoteViewModel noteViewModel;
+    @Inject
+    NoteViewModelFactory noteViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +40,7 @@ public class AddNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         noteTitleEt = findViewById(R.id.note_title_et);
         noteDescEt = findViewById(R.id.note_description_et);
-        noteViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(this, noteViewModelFactory).get(NoteViewModel.class);
         getNote();
     }
 

@@ -1,4 +1,4 @@
-package com.example.mvvmtesttask.data;
+package com.example.mvvmtesttask.local;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

@@ -1,12 +1,5 @@
 package com.example.mvvmtesttask.ui.noteList;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +9,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mvvmtesttask.R;
-import com.example.mvvmtesttask.data.NoteViewModel;
+import com.example.mvvmtesttask.model.NoteViewModel;
+import com.example.mvvmtesttask.model.NoteViewModelFactory;
+import com.example.mvvmtesttask.model.entities.Note;
 import com.example.mvvmtesttask.ui.AddNoteActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class NoteListActivity extends AppCompatActivity implements NoteAdapter.OnNoteClicked{
     public static final String NOTE_KEY = "note";
     RecyclerView recyclerView;
@@ -31,27 +35,29 @@ public class NoteListActivity extends AppCompatActivity implements NoteAdapter.O
     TextView emptyNoteTv;
     private NoteViewModel noteViewModel;
 
+    @Inject
+    NoteViewModelFactory noteViewModelFactory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
         initUI();
 
-        noteViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(NoteViewModel.class);
-        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
-                if(notes!= null && notes.size() !=0){
-                    emptyNoteTv.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    noteAdapter.setNotes(notes);
-                }
-                else {
-                    emptyNoteTv.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
-                }
 
+        noteViewModel = new ViewModelProvider(this, noteViewModelFactory).get(NoteViewModel.class);
+
+        noteViewModel.getAllNotes().observe(this, notes -> {
+            if(notes!= null && notes.size() !=0){
+                emptyNoteTv.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                noteAdapter.setNotes(notes);
             }
+            else {
+                emptyNoteTv.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+
         });
     }
 
@@ -62,12 +68,7 @@ public class NoteListActivity extends AppCompatActivity implements NoteAdapter.O
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(noteAdapter);
         emptyNoteTv = findViewById(R.id.no_note_tv);
-        addNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(NoteListActivity.this, AddNoteActivity.class));
-            }
-        });
+        addNote.setOnClickListener(view -> startActivity(new Intent(NoteListActivity.this, AddNoteActivity.class)));
     }
 
     @Override

@@ -1,14 +1,17 @@
-package com.example.mvvmtesttask.ui.noteList;
+package com.example.mvvmtesttask.domain.entity;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
 
-public class Note implements Serializable {
+
+public class NoteDomain implements Serializable {
     private String noteId;
     private  String noteTitle;
     private String noteDescription;
 
-    public Note(String noteId, String noteTitle, String noteDescription) {
+    @Inject
+    public NoteDomain(String noteId, String noteTitle, String noteDescription) {
         this.noteId = noteId;
         this.noteTitle = noteTitle;
         this.noteDescription = noteDescription;
